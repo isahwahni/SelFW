@@ -11,10 +11,19 @@ public class PDP extends SelTestCase {
 	
 	public static class keys
 	{
+		public static final String id = "id";
+		public static final String name = "name";
+		public static final String title = "title";
 		public static final String url = "url";
 		public static final String color = "color";
 		public static final String size = "size";
 		public static final String qty = "qty";
+		public static final String summary = "summary";
+		public static final String price = "price";
+		public static final String desc = "desc";
+		public static final String reviews = "reviews";
+		public static final String rating = "rating";
+		
 		
 	}
 	public static void addProductsToCart(String url, String color, String size, String qty) throws Exception {
@@ -92,6 +101,61 @@ public class PDP extends SelTestCase {
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
+	}
+
+	public static String getId() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PDPSelectors.id);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		return SelectorUtil.textValue.get();
+	}
+
+	public static String getTitle() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PDPSelectors.title);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		return SelectorUtil.textValue.get();
+	}
+
+	public static String getSummary() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PDPSelectors.summary);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		return SelectorUtil.textValue.get();
+	}
+
+	public static String getDesc() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PDPSelectors.desc);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		return SelectorUtil.textValue.get();
+	}
+
+	public static String getStockLevel() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PDPSelectors.SL);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+		return SelectorUtil.textValue.get();
 	}
 
 }

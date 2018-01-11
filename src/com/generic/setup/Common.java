@@ -90,19 +90,6 @@ public class Common extends SelTestCase {
 				driver = new ChromeDriver(co);
 				return driver;
 
-			}  else if (browser.equalsIgnoreCase("chrome2")) {
-
-				capabilities = DesiredCapabilities.chrome();
-				capabilities.setCapability("platform", "WINDOWS");
-				capabilities.setBrowserName("chrome");
-
-				ChromeOptions options = new ChromeOptions();
-
-				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-				System.setProperty("webdriver.chrome.driver", PagesURLs.getDriversPath(browser));
-				driver = new ChromeDriver(capabilities);
-				return driver;
-
 			} else if (browser.equalsIgnoreCase("safari_grid")) {
 				SafariOptions options = new SafariOptions();
 				// options.setUseCleanSession(true);
@@ -113,6 +100,7 @@ public class Common extends SelTestCase {
 				// capabilities.setCapability("ensureCleanSession", true);
 				// TODO: change it and setup grid server
 				SelTestCase.setDriver(new RemoteWebDriver(new URL("http://10.20.20.54:4444/wd/hub"), capabilities));
+				
 			} else if (browser.contains("mobile")) {
 				String mobile = browser.split("_")[1];
 				capabilities = DesiredCapabilities.chrome();
@@ -135,7 +123,7 @@ public class Common extends SelTestCase {
 				options.setExperimentalOption("mobileEmulation", mobileEmulation);
 				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 
-				System.setProperty("webdriver.chrome.driver", PagesURLs.getDriversPath(browser));
+				System.setProperty("webdriver.chrome.driver", PagesURLs.getDriversPath("chrome"));
 				return new ChromeDriver(capabilities);
 
 			} else {
@@ -374,24 +362,41 @@ public class Common extends SelTestCase {
 		LinkedHashMap<String, Object> products = new LinkedHashMap<>();
 		Object[][] data = TestUtilities.getData(SheetVariables.products, 1);
 
+		logs.debug("=====================>" +Arrays.deepToString(data).replace("\n", "--"));
+		
 		// data map
 		int header = 0;
 		int name = 0;
-		int url = 1;
-		int color = 2;
-		int size = 3;
-		int qty = 4;
+		int id = 1;
+		int title = 2;
+		int url = 3;
+		int color = 4;
+		int size = 5;
+		int qty = 6;
+		int summary = 7;
+		int price = 8; 
+		int desc = 9; 
+		int reviews = 10; 
+		int rating = 11;
+		
 
 		for (int row = 1; row < data.length; row++) {
 			LinkedHashMap<String, Object> product = new LinkedHashMap<>();
+			product.put((String) data[header][id], data[row][id]);
+			product.put((String) data[header][title], data[row][title]);
 			product.put((String) data[header][url], data[row][url]);
 			product.put((String) data[header][color], data[row][color]);
 			product.put((String) data[header][size], data[row][size]);
 			product.put((String) data[header][qty], data[row][qty]);
+			product.put((String) data[header][summary], data[row][summary]);
+			product.put((String) data[header][price], data[row][price]);
+			product.put((String) data[header][desc], data[row][desc]);
+			product.put((String) data[header][reviews], data[row][reviews]);
+			product.put((String) data[header][rating], data[row][rating]);
 
 			products.put((String) data[row][name], product);
 		}
-		logs.debug(Arrays.asList(products)+"");
+		logs.debug("=====================>" + Arrays.asList(products));
 		return products;
 	}// readProducts
 

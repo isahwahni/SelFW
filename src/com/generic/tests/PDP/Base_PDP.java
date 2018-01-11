@@ -1,5 +1,5 @@
 /**
- * this generic test for cart regression that will pull tests from cartRegression tab from
+ * this generic test for PDP regression that will pull tests from PDPRegression tab from
  * datasheet.xlsx. 
 */
 package com.generic.tests.PDP;
@@ -16,6 +16,7 @@ import org.testng.xml.XmlTest;
 import com.generic.page.Cart;
 import com.generic.page.CheckOut;
 import com.generic.page.PDP;
+import com.generic.page.Registration;
 import com.generic.page.SignIn;
 import com.generic.setup.Common;
 import com.generic.setup.LoggingMsg;
@@ -24,6 +25,7 @@ import com.generic.setup.SheetVariables;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 import com.generic.util.TestUtilities;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Base_PDP extends SelTestCase {
 
@@ -35,7 +37,7 @@ public class Base_PDP extends SelTestCase {
 	public static final String loggedInUser = "loggedin";
 
 	// used sheet in test
-	public static final String testDataSheet = SheetVariables.cartSheet;
+	public static final String testDataSheet = SheetVariables.PDPSheet;
 
 	private static XmlTest testObject;
 	private static ThreadLocal<SASLogger> Testlogs = new ThreadLocal<SASLogger>();
@@ -45,117 +47,89 @@ public class Base_PDP extends SelTestCase {
 
 	@BeforeClass
 	public static void initialSetUp(XmlTest test) throws Exception {
-		testCaseRepotId = SheetVariables.cartCaseId;
+		testCaseRepotId = SheetVariables.PDPCaseId;
 		Testlogs.set(new SASLogger(test.getName() + test.getIndex()));
 		testObject = test;
 		invintory = Common.readLocalInventory();
 		users = Common.readUsers();
 	}
 
-	@DataProvider(name = "Carts", parallel = true)
+	@DataProvider(name = "PDPs", parallel = true)
 	public static Object[][] loadTestData() throws Exception {
-		// concurrency mentainance on sheet reading
+		// concurrency maintenance on sheet reading
 		getBrowserWait(testObject.getParameter("browserName"));
 		Object[][] data = TestUtilities.getData(testDataSheet);
 		Testlogs.get().debug(Arrays.deepToString(data).replace("\n", "--"));
 		return data;
 	}
 
-	@Test(dataProvider = "Carts")
-	public void checkOutBaseTest(String caseId, String runTest, String desc, String proprties, String products,
-			String email, String newQTY, String coupon, String ValidationMsg) throws Exception {
+	@Test(dataProvider = "PDPs")
+	public void checkOutBaseTest(String caseId, String runTest, String desc, String proprties, String product,
+			String email, String ValidationMsg) throws Exception {
 		// Important to add this for logging/reporting
-		Testlogs.set(new SASLogger("checkout_" + getBrowserName()));
-		setTestCaseReportName("cart Case");
+		Testlogs.set(new SASLogger("PDP_" + getBrowserName()));
+		setTestCaseReportName("PDP Case");
 		logCaseDetailds(MessageFormat.format(LoggingMsg.CARTDESC, testDataSheet + "." + caseId,
-				this.getClass().getCanonicalName(), desc, proprties.replace("\n", "<br>- "), coupon, newQTY));
-		this.email = email;
+				this.getClass().getCanonicalName(), desc, proprties.replace("\n", "<br>- ")));
+		this.email = getSubMailAccount(email);
 		this.caseIndexInDatasheet = getDatatable().getCellRowNum(testDataSheet, CheckOut.keys.caseId, caseId);
 		try {
 
-			if (proprties.contains("Loggedin"))
-				for (String product : products.split("\n"))
-					prepareCartLoggedInUser(this.email, product);
-			else
-				for (String product : products.split("\n"))
-					prepareCartNotLoggedInUser(product);
-
-			if (proprties.contains("cart UI") ) {
-				logs.debug("checking the cart UI");
-				sassert().assertTrue(Cart.checkItemImage(), "<font color=#f442cb>NOT All product images are ok</font>");
-				sassert().assertTrue(Cart.checkProductLink((String) productDetails.get(PDP.keys.url)),
-						"<font color=#f442cb>Product link is Not ok</font>");
+			if (proprties.contains("Loggedin")) {
+				LinkedHashMap<String, Object> userdetails = (LinkedHashMap<String, Object>) users.get(email);
+				Testlogs.get().debug("Used mail to login: "+this.email);
+				Testlogs.get().debug("Used Password to login: "+(String) userdetails.get(Registration.keys.password) );
+				SignIn.logIn(this.email, (String) userdetails.get(Registration.keys.password));
 			}
+			LinkedHashMap<String, Object> productDetails = (LinkedHashMap<String, Object>) invintory.get(product);
+			Testlogs.get().debug("productDetails" + Arrays.asList(productDetails));
+			Testlogs.get().debug("url key " + PDP.keys.url);
+			Testlogs.get().debug("url key value " + (String) productDetails.get(PDP.keys.url));
+			getDriver().get((String) productDetails.get(PDP.keys.url));
 
-			// flow to support coupon validation
-			if (!"".equals(coupon)) {
+			if (proprties.contains("id") ){
+				logs.debug("checking PDP ID");
+				String Id = PDP.getId();
+				sassert().assertTrue(Id.contains((String) productDetails.get(PDP.keys.id)), "<font color=#f442cb>product id is not expected</font>");
 				ReportUtil.takeScreenShot(getDriver());
-				Cart.applyCoupon(coupon);
-				ReportUtil.takeScreenShot(getDriver());
-				String validationMessage = Cart.validateCoupon();
-				if (!ValidationMsg.equals(""))
-					sassert().assertTrue(ValidationMsg.contains(validationMessage), "<font color=#f442cb>coupon messgae is not same:  "+ValidationMsg+"</font>");
-				ReportUtil.takeScreenShot(getDriver());
-			}
+			}//id check
 			
-			//quantity validation
-			if (!newQTY.equals("")) {
-				// verifying that no new lines being added to cart
-				double subtotal = Double.parseDouble(Cart.getOrderSubTotal().replace("£", ""));
-				String numberOfItems = Cart.getNumberOfproducts().split("item")[0].trim();
-				String productQty = Cart.getProductQty(getBrowserName(), 0);
-				Cart.updateQuantityValue(getBrowserName(), "0", newQTY);
-				if (!newQTY.equals("0") && !Cart.isCartEmpty()) {
-					double subtotalAfter = Double.parseDouble(Cart.getOrderSubTotal().replace("£", ""));
-					String numberOfItemsAfterUpdate = Cart.getNumberOfproducts().split("item")[0].trim();
-					String validationMessage = Cart.getCartMsg();
-					String productQtyAfter = Cart.getProductQty(getBrowserName(), 0);
 
-					double expectedSubtotal = subtotal * Double.parseDouble(productQtyAfter)
-							/ Double.parseDouble(productQty);
-					
-					logs.debug("<font color=#f442cb>update MSG:" + validationMessage + "</font>");
-					sassert().assertTrue(validationMessage.contains(ValidationMsg),
-							"<font color=#f442cb>QTY it not updated correctely, MSG:" + validationMessage + "</font>");
-					
-					logs.debug("<font color=#f442cb>number of items before: " + numberOfItems
-							+ " after " + numberOfItemsAfterUpdate + "</font>");
-					sassert().assertTrue(numberOfItemsAfterUpdate.contains(numberOfItems),
-							"<font color=#f442cb>number of items before: " + numberOfItems
-									+ " in cart is not same after " + numberOfItemsAfterUpdate + "</font>");
-					
-					logs.debug("<font color=#f442cb>product new QTY"+newQTY+"appearing in cart " + productQtyAfter+ "</font>");
-					sassert().assertTrue(productQtyAfter.equals(newQTY),
-							"<font color=#f442cb>product new QTY is not appearing in cart " + productQtyAfter
-									+ "</font>");
-					
-					logs.debug("<font color=#f442cb>subtotal before "+ subtotal + "subtotal after " + subtotalAfter + "</font>");
-					sassert().assertTrue(expectedSubtotal == subtotalAfter, "<font color=#f442cb>subtotal before "
-							+ subtotal + "subtotal after " + subtotalAfter + "</font>");
-				}//Quantity check 
-				
-				if (proprties.contains("click checkout"))
-				{
-					Cart.clickCheckout();
-					//TODO: verify if you are in checkout page 
-				}else
-				{
-					Cart.clickContinueShoping();
-					//TODO: verify if you are in guest checkout page 
-				}
-				
-				if (proprties.contains("loggedin"))
-				{
-					//navigate back to cart
-					getDriver().get("https://hybrisdemo.conexus.co.uk:9002/yacceleratorstorefront/en/cart");
-					Cart.removeAllItemsFromCart();
-				}
-				if (proprties.contains("remove coupon"))
-					Cart.removeCoupon();
-			}
-
-			ReportUtil.takeScreenShot(getDriver());
-
+			if (proprties.contains("name") ){
+				logs.debug("checking PDP title");
+				String title = PDP.getTitle();
+				sassert().assertTrue(title.contains((String) productDetails.get(PDP.keys.title)), "<font color=#f442cb>product title is not expected</font>");
+				ReportUtil.takeScreenShot(getDriver());
+			}//title check
+			
+			if (proprties.contains("price") ){
+				logs.debug("checking PDP price");
+				String price = PDP.getPrice();
+				sassert().assertTrue(price.contains((String) productDetails.get(PDP.keys.price)), "<font color=#f442cb>product price is not expected</font>");
+				ReportUtil.takeScreenShot(getDriver());
+			}//price check
+			
+			if (proprties.contains("summary") ){
+				logs.debug("checking PDP summary");
+				String summary = PDP.getSummary();
+				sassert().assertTrue(summary.contains((String) productDetails.get(PDP.keys.summary)), "<font color=#f442cb>product summary is not expected</font>");
+				ReportUtil.takeScreenShot(getDriver());
+			}//summary check
+			
+			if (proprties.contains("desc") ){
+				logs.debug("checking PDP desc");
+				String Pdesc = PDP.getDesc();
+				sassert().assertTrue(Pdesc.contains((String) productDetails.get(PDP.keys.desc)), "<font color=#f442cb>product desc is not expected</font>");
+				ReportUtil.takeScreenShot(getDriver());
+			}//desc check
+			
+			if (proprties.contains("stock level indicator") ){
+				logs.debug("checking PDP stock level indicator");
+				String SL = PDP.getStockLevel();
+				Testlogs.get().debug(SL);
+				ReportUtil.takeScreenShot(getDriver());
+			}//stock level indicator check
+			
 			sassert().assertAll();
 			Common.testPass();
 		} catch (Throwable t) {
@@ -188,16 +162,6 @@ public class Base_PDP extends SelTestCase {
 		productDetails = (LinkedHashMap<String, Object>) invintory.get(product);
 		PDP.addProductsToCart((String) productDetails.get(PDP.keys.url), (String) productDetails.get(PDP.keys.color),
 				(String) productDetails.get(PDP.keys.size), (String) productDetails.get(PDP.keys.qty));
-
-	}
-
-	public void prepareCartNotLoggedInUser() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void prepareCartLoggedInUser() {
-		// TODO Auto-generated method stub
 
 	}
 
