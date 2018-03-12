@@ -17,20 +17,18 @@ import com.generic.page.MyAccount_Password;
 import com.generic.page.SignIn;
 import com.generic.setup.Common;
 import com.generic.setup.LoggingMsg;
+import com.generic.setup.PagesURLs;
 import com.generic.setup.SelTestCase;
 import com.generic.setup.SheetVariables;
 import com.generic.util.TestUtilities;
+import com.generic.util.dataProviderUtils;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 
 public class MyAccount_PasswordValidation extends SelTestCase {
 	// used sheet in test
-	public static final String testDataSheet = SheetVariables.PasswordRegression;
-	private boolean doClickCancelBtn;
-	private boolean doClickUpdateBtn;
-	private String email;
+	public static final String testDataSheet = SheetVariables.PasswordRegressionSheet;
 	private int caseIndexInDatasheet;
-	private boolean revertChanges;
 
 
 	private static XmlTest testObject;
@@ -40,7 +38,7 @@ public class MyAccount_PasswordValidation extends SelTestCase {
 
 	@BeforeTest
 	public static void initialSetUp(XmlTest test) throws Exception {
-		Testlogs.set(new SASLogger(""));
+		Testlogs.set(new SASLogger(test.getName() + test.getIndex()));
 		testObject = test;
 		users = Common.readUsers();
 	}
@@ -50,7 +48,8 @@ public class MyAccount_PasswordValidation extends SelTestCase {
 	public static Object[][] loadTestData() throws Exception {
 		getBrowserWait(testObject.getParameter("browserName"));
 
-		Object[][] data = TestUtilities.getData(testDataSheet);
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(testDataSheet);
 		Testlogs.get().debug(Arrays.deepToString(data).replace("\n", "--"));
 		return data;
 	}
@@ -58,12 +57,12 @@ public class MyAccount_PasswordValidation extends SelTestCase {
 	@SuppressWarnings("unchecked") // avoid warning from linked hashmap
 	@Test(dataProvider = "Password")
 	public void verifyPasswordUpdates(String caseId, String runTest, String desc, String proprties, String email,
-			String url, String currentPassword, String newPassword,String confirmNewPassword, String globalAlerts, String currentPasswordErrors,
+			String currentPassword, String newPassword,String confirmNewPassword, String globalAlerts, String currentPasswordErrors,
 			String newPasswordEerrors,String confirmNewPasswordErrors) throws Exception {
 
-		doClickCancelBtn = proprties.contains("click cancel");
-		doClickUpdateBtn = proprties.contains("click update");
-		revertChanges = proprties.contains("revert changes");
+		boolean doClickCancelBtn = proprties.contains("click cancel");
+		boolean doClickUpdateBtn = proprties.contains("click update");
+		boolean revertChanges = proprties.contains("revert changes");
 		
 		LinkedHashMap<String, Object> userDetails = (LinkedHashMap<String, Object>) users.get(email);
 
@@ -73,12 +72,14 @@ public class MyAccount_PasswordValidation extends SelTestCase {
 		logCaseDetailds(MessageFormat.format(LoggingMsg.TEST_CASE_DESC, testDataSheet + "." + caseId,
 				this.getClass().getCanonicalName(), desc));
 
-		this.email = getSubMailAccount(email);
+		String emailSubmail = getSubMailAccount(email);
+		String url = PagesURLs.getPasswordPage();
+		
 		caseIndexInDatasheet = getDatatable().getCellRowNum(testDataSheet, MyAccount_Password.keys.caseId, caseId);
 
 		try {
 
-			SignIn.logIn(this.email, (String)userDetails.get(Registration.keys.password));
+			SignIn.logIn(emailSubmail, (String)userDetails.get(Registration.keys.password));
 			getDriver().get(url);
 //			if(password.equals("1234567")){
 //				password=(String)userDetails.get(Registration.keys.password);

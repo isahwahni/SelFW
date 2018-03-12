@@ -20,6 +20,7 @@ public class EnvironmentFiles {
 	public static String failedTestCaseReportTemplate = System.getProperty("user.dir")+"//src//com//generic//reports//reportsTemplates//failedTCTemplate.html";
 	//Index Test Cases Template HTML File
 	public static String executinResultsIndexFileTemplate = System.getProperty("user.dir")+"//src//com//generic//reports//reportsTemplates//indexTemplate.html";
+	public static String visualTestingAssetsPath = System.getProperty("user.dir")+"//VisualTestingAssets";
 	
 	public static String getConfigFilePath() {
 		return configFilePath;
@@ -63,6 +64,10 @@ public class EnvironmentFiles {
 		return logFileName;
 	}
 
+	public static String getVisualTestingAssetsPath() {
+		return visualTestingAssetsPath;
+	}
+	
 	public static void setLogFileName(String logFileName) {
 		if (logFileName.endsWith(".log")) {
 		EnvironmentFiles.logFileName = logFileName;

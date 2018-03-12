@@ -26,8 +26,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 
 import com.generic.setup.SelTestCase;
-import com.generic.selector.CartSelectors;
-import com.generic.setup.ActionDriver;
+
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+
 import com.generic.setup.ExceptionMsg;
 import com.generic.setup.LoggingMsg;
 
@@ -37,10 +39,12 @@ public class SelectorUtil extends SelTestCase {
 	public static Boolean isAnErrorSelector = Boolean.FALSE;
 	//public static String textValue;
 	public static ThreadLocal<String> textValue = new ThreadLocal<String>() ;
+	public static ThreadLocal<Screenshot> screenShot = new ThreadLocal<Screenshot>() ;
 	//public static int numberOfFoundElements;
 	public static ThreadLocal<String> numberOfFoundElements  = new ThreadLocal<String>() ;
 	private static By parentBy = null;
 	
+	@SuppressWarnings("rawtypes")
 	public static void initializeElementsSelectorsMaps(LinkedHashMap<String, LinkedHashMap> webElementsInfo , boolean isValidationStep) throws IOException, InterruptedException
 	 {
 		Thread.sleep(1000);
@@ -50,6 +54,8 @@ public class SelectorUtil extends SelTestCase {
 		initializeElementsSelectorsMaps(webElementsInfo, isValidationStep, htmlDoc);
 		}catch (NoSuchElementException e) {
 			Thread.sleep(2000);
+			if (SelTestCase.getBrowserName().contains("firfox"))
+				Thread.sleep(2000);
 			logs.debug("Second try for getting element");
 			Document doc = Jsoup.parse(SelTestCase.getDriver().getPageSource());
 			Element htmlDoc = doc.select("html").first();
@@ -57,7 +63,8 @@ public class SelectorUtil extends SelTestCase {
 		}
 	 }
 	
-	 public static void initializeElementsSelectorsMaps(LinkedHashMap<String, LinkedHashMap> webElementsInfo , boolean isValidationStep, Element htmlDoc) throws IOException
+	 @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void initializeElementsSelectorsMaps(LinkedHashMap<String, LinkedHashMap> webElementsInfo , boolean isValidationStep, Element htmlDoc) throws IOException
 	 {
 		 	getCurrentFunctionName(true);
 	    	Elements foundElements = null;
@@ -330,7 +337,7 @@ public class SelectorUtil extends SelTestCase {
 	    	textValue.set(""); 
 	    	
 	    	String browser = SelTestCase.getBrowserName();
-	    	
+	    		    	
 	    	try
 	        {
 	    		String selector = (String) webElementInfo.get("selector");
@@ -364,7 +371,7 @@ public class SelectorUtil extends SelTestCase {
 						  if (value.contains("getCurrentValue")) {
 							  logs.debug(MessageFormat.format(LoggingMsg.GETTING_SEL,"txt", byAction.toString()));
 							  JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-							   jse.executeScript("arguments[0].scrollIntoView()", field);
+							   jse.executeScript("arguments[0].scrollIntoView(false)", field);
 							  // I used the value attr instead of getText() as the input has the text as a value
 							   textValue.set(field.getAttribute("value"));
 							   logs.debug("the text value is: " + SelectorUtil.textValue.get());
@@ -372,7 +379,7 @@ public class SelectorUtil extends SelTestCase {
 
 							  logs.debug(MessageFormat.format(LoggingMsg.WRITING_TO_SEL, "", value, byAction.toString()));
 							  JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-							   jse.executeScript("arguments[0].scrollIntoView()", field);
+							   jse.executeScript("arguments[0].scrollIntoView(false)", field);
 							   field.clear();
 							  String tempVal = value;
 							  if (value.contains("pressEnter")) {
@@ -380,9 +387,34 @@ public class SelectorUtil extends SelTestCase {
 							  }
 							  field.sendKeys(tempVal);
 							  if (!tempVal.equals(value)) {
-								field.sendKeys(Keys.ENTER);  
+								field.sendKeys(Keys.ENTER); 
+								if(browser.contains("edge") )
+								   {
+									field.sendKeys(Keys.ENTER); 
+								   }
 							  }
 						  }
+					   }
+					   else if(value.contains("VisualTesting"))
+					   {
+						   Wait<WebDriver> wait = new FluentWait<WebDriver>(SelTestCase.getDriver())
+							       .withTimeout(30, TimeUnit.SECONDS)
+							       .pollingEvery(5, TimeUnit.SECONDS)
+							       .ignoring(NoSuchElementException.class);
+								   //TODO: move it to general function
+						   
+						   logs.debug("Visual testing for: " + field.toString());
+						   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
+						   jse.executeScript("arguments[0].scrollIntoView(false)", field);
+						   
+						   Thread.sleep(500);
+						   
+						   
+						   WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
+							   public WebElement apply(WebDriver driver) {
+								   return driver.findElement(byAction);
+							   }});
+						   screenShot.set(new AShot().takeScreenshot(SelTestCase.getDriver(),field2));
 					   }
 					   else if (action.equals("click"))
 					   {
@@ -394,14 +426,14 @@ public class SelectorUtil extends SelTestCase {
 					   
 						   logs.debug(MessageFormat.format(LoggingMsg.CLICKING_SEL, byAction.toString()));
 						   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-						   jse.executeScript("arguments[0].scrollIntoView()", field); 
+						   jse.executeScript("arguments[0].scrollIntoView(false)", field); 
 						   Thread.sleep(200);
 						    WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
 							   public WebElement apply(WebDriver driver) {
 								   return driver.findElement(byAction);
 							   }});
 						    logs.debug("browser..."+ browser);
-						   if(browser.contains("firefox") || browser.contains("chrome") )
+						   if(browser.contains("firefox") )
 						   {
 							   logs.debug("clicking..."+ SelTestCase.getBrowserName());
 							   field2.click();
@@ -426,14 +458,14 @@ public class SelectorUtil extends SelTestCase {
 								   //TODO: move it to general function
 									   logs.debug(MessageFormat.format(LoggingMsg.CLICKING_SEL, byAction.toString()));
 									   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-									   jse.executeScript("arguments[0].scrollIntoView()", field); 
+									   jse.executeScript("arguments[0].scrollIntoView(false)", field); 
 									   Thread.sleep(200);
 									    WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
 										   public WebElement apply(WebDriver driver) {
 											   return driver.findElement(byAction);
 										   }});
 									    logs.debug("browser..."+ browser);
-									   if(browser.contains("firefox") || browser.contains("chrome") )
+									   if(browser.contains("firefox") )
 									   {
 										   logs.debug("clicking..."+ browser);
 										   field2.click();
@@ -459,14 +491,14 @@ public class SelectorUtil extends SelTestCase {
 								 //	TODO: move this to function 
 									   logs.debug(MessageFormat.format(LoggingMsg.CLICKING_SEL, byAction.toString()));
 									   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-									   jse.executeScript("arguments[0].scrollIntoView()", field); 
+									   jse.executeScript("arguments[0].scrollIntoView(false)", field); 
 									   Thread.sleep(200);
 									    WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
 										   public WebElement apply(WebDriver driver) {
 											   return driver.findElement(byAction);
 										   }});
 									    logs.debug("browser..."+ browser);
-									   if(browser.contains("firefox") || browser.contains("chrome") )
+									   if(browser.contains("firefox")  )
 									   {
 										   logs.debug("clicking..."+ browser);
 										   field2.click();
@@ -490,7 +522,7 @@ public class SelectorUtil extends SelTestCase {
 						   logs.debug(MessageFormat.format(LoggingMsg.GETTING_SEL, "txt, click", byAction.toString()));
 						   
 						   JavascriptExecutor jse = (JavascriptExecutor)getDriver();
-						   jse.executeScript("arguments[0].scrollIntoView()", field); 
+						   jse.executeScript("arguments[0].scrollIntoView(false)", field); 
 						   
 						   String textVal= "";
 						   try 
@@ -514,14 +546,14 @@ public class SelectorUtil extends SelTestCase {
 								   
 									   logs.debug(MessageFormat.format(LoggingMsg.CLICKING_SEL, byAction.toString()));
 									   JavascriptExecutor jse1 = (JavascriptExecutor)getDriver();
-									   jse1.executeScript("arguments[0].scrollIntoView()", field); 
+									   jse1.executeScript("arguments[0].scrollIntoView(false)", field); 
 									   Thread.sleep(200);
 									   WebElement field2 = wait.until(new Function<WebDriver, WebElement>() {
 										   public WebElement apply(WebDriver driver) {
 											   return driver.findElement(byAction);
 										   }});
 									    logs.debug("browser..."+ browser);
-									   if(browser.contains("firefox") || browser.contains("chrome") )
+									   if(browser.contains("firefox")  )
 									   {
 										   logs.debug("clicking..."+ browser);
 										   field2.click();
@@ -551,25 +583,31 @@ public class SelectorUtil extends SelTestCase {
 						   String textVal= "";
 						   try {
 							   if (!value.isEmpty()) {
-								   select.selectByVisibleText(value); 
-							   } else {
+								   List<WebElement> options = select.getOptions();
+								   for(int i=0; i<options.size(); i++)
+								   {
+									   // logs.debug(options.get(i).getText().trim());
+									   if (options.get(i).getText().toLowerCase().trim().contains(value.toLowerCase()) && !value.equals(""))
+									   {
+										   logs.debug(MessageFormat.format(LoggingMsg.SELECTED_INDEX, i )); 
+										   select.selectByIndex(i);
+										   break;
+									   }
+								   }
+							   }
+							   else
+							   {
 								   textVal = select.getFirstSelectedOption().getText();
 							   }
-							   
 						   }
 						   catch(Exception e)
 						   {
 							   logs.debug(LoggingMsg.TRY_ALT_WAY_MSG);
-							   List<WebElement> options = select.getOptions();
-							   for(int i=0; i<options.size(); i++)
-							   {
-								  // logs.debug(options.get(i).getText().trim());
-							   	    if (options.get(i).getText().toLowerCase().trim().contains(value.toLowerCase()))
-							   	    {
-										logs.debug(MessageFormat.format(LoggingMsg.SELECTED_INDEX, i )); 
-							   	    	select.selectByIndex(i);
-							   	    }
-							   	}
+							   if (!value.isEmpty()) {
+								   select.selectByVisibleText(value); 
+							   } else {
+								   textVal = select.getFirstSelectedOption().getText();
+							   }
 						   }
 						   textValue.set(textVal);
 					   }
@@ -612,6 +650,22 @@ public class SelectorUtil extends SelTestCase {
 	    }
 	    
 	    @SuppressWarnings("rawtypes")
+		public static boolean isDisplayed(List<String> subStrArr, int index) throws Exception
+	    {
+	      	getCurrentFunctionName(true);
+	    	List<String> valuesArr = new ArrayList<String>();
+	    	valuesArr.add("");
+	    	LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(new ArrayList<String>(subStrArr), valuesArr, false);
+	    	List <WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+	    	
+	    	boolean isDisplayed = true;
+    		if (!items.get(index).isDisplayed())
+    			isDisplayed = false;
+	    	getCurrentFunctionName(false);
+	    	return isDisplayed;
+	    }
+	    
+	    @SuppressWarnings({ "rawtypes", "unused" })
 		public static boolean isNotDisplayed(List<String> subStrArr) throws Exception
 	    {
 	    	getCurrentFunctionName(true);
@@ -642,13 +696,26 @@ public class SelectorUtil extends SelTestCase {
 			return attrValue;
 	    }
 	    
+	@SuppressWarnings("rawtypes")
+	public static String getAttr(List<String> subStrArr, String attr, int index) throws Exception {
+		getCurrentFunctionName(true);
+		List<String> valuesArr = new ArrayList<String>();
+		valuesArr.add("");
+		LinkedHashMap<String, LinkedHashMap> webelementsInfo = initializeSelectorsAndDoActions(
+				new ArrayList<String>(subStrArr), valuesArr, false);
+		List<WebElement> items = getDriver().findElements((By) webelementsInfo.get(subStrArr.get(0)).get("by"));
+		String attrValue = items.get(index).getAttribute(attr);
+		getCurrentFunctionName(false);
+		return attrValue;
+	}
+
 	    @SuppressWarnings("rawtypes")
 		public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr, List<String> valuesArr ) throws Exception {
 	    	return initializeSelectorsAndDoActions(subStrArr,valuesArr , true);
 	    }
 	    
 	    
-	    @SuppressWarnings("rawtypes")
+	    @SuppressWarnings({ "rawtypes", "unchecked" })
 		public static LinkedHashMap<String, LinkedHashMap> initializeSelectorsAndDoActions(List<String> subStrArr,
 				List<String> valuesArr , boolean action) throws Exception {
 			LinkedHashMap<String, LinkedHashMap> webElementsInfo = new LinkedHashMap<String, LinkedHashMap>();

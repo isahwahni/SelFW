@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Global Regression suite" parallel="tests" thread-count="5" data-provider-thread-count="2">
+
+	<test name="HP_SC Chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.HomePageBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="HP_SC firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.HomePageBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="HP_SC mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.HomePageBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Storelocator chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.storeLocator.StoreLocatorBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Storelocator firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.storeLocator.StoreLocatorBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Storelocator mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.storeLocator.StoreLocatorBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Registration Chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.Registration.RegistrationFormValidation" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="Registration firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.Registration.RegistrationFormValidation" />
+		</classes>
+	</test>
+
+	<test name="Registration mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.Registration.RegistrationFormValidation" />
+		</classes>
+	</test>
+
+	<test name="PLP validation chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.PLP.PLPValidation" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="PLP validation firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.PLP.PLPValidation" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="PLP validation mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.PLP.PLPValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="PDP_ chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.PDP.Base_PDP" />
+		</classes>
+	</test><!-- Test -->
+	<test name="PDP_ firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.PDP.Base_PDP" />
+		</classes>
+	</test><!-- Test -->
+	<test name="PDP_ mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_iPhone 6"></parameter>
+		<classes>
+			<class name="com.generic.tests.PDP.Base_PDP" />
+		</classes>
+	</test><!-- Test -->
+	<test name="ordersHistoryDetasils chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.ordersHistory.OrderHistoryValidation" />
+			<class name="com.generic.tests.ordersHistory.OrderDetailsValidation" />
+
+		</classes>
+	</test><!-- Test -->
+
+	<test name="ordersHistoryDetasils firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.ordersHistory.OrderHistoryValidation" />
+			<class name="com.generic.tests.ordersHistory.OrderDetailsValidation" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="ordersHistoryDetasils mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.ordersHistory.OrderHistoryValidation" />
+			<class name="com.generic.tests.ordersHistory.OrderDetailsValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Account firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.account.AddressBookValidation" />
+			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
+			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
+			<class name="com.generic.tests.account.PaymentDetailsValidation" />
+			<class name="com.generic.tests.account.PersonalDetailsValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Account chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.account.AddressBookValidation" />
+			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
+			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
+			<class name="com.generic.tests.account.PaymentDetailsValidation" />
+			<class name="com.generic.tests.account.PersonalDetailsValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Account mobile">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.account.AddressBookValidation" />
+			<class name="com.generic.tests.account.MyAccount_EmailAddressValidation" />
+			<class name="com.generic.tests.account.MyAccount_PasswordValidation" />
+			<class name="com.generic.tests.account.PaymentDetailsValidation" />
+			<class name="com.generic.tests.account.PersonalDetailsValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Login chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Login firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Login mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="errorPages firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.errorPages.ErrorPagesValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="errorPages chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.errorPages.ErrorPagesValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="errorPages mobile">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.errorPages.ErrorPagesValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="CLP_SC Chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.CLPBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="CLP_SC firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.CLPBase" />
+		</classes>
+	</test><!-- Test -->
+	<test name="CLP_SC mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.staticContects.CLPBase" />
+		</classes>
+	</test><!-- Test -->
+	
+	<test name="checkout chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout" />
+		</classes>
+	</test><!-- Test -->
+	<test name="checkout firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout" />
+		</classes>
+	</test><!-- Test -->
+	<test name="checkout mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout" />
+		</classes>
+	</test><!-- Test -->
+	<test name="checkoutNeg chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout_negativeCases" />
+		</classes>
+	</test><!-- Test -->
+	<test name="checkoutNeg firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout_negativeCases" />
+		</classes>
+	</test><!-- Test -->
+	<test name="checkoutNeg mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.Base_checkout_negativeCases" />
+		</classes>
+	</test><!-- Test -->
+	<test name="cart Tests _ chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.Cart.Base_cart" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="cart Tests_ firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.Cart.Base_cart" />
+		</classes>
+	</test><!-- Test -->
+
+	<test name="cart Tests_ nexus5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.Cart.Base_cart" />
+		</classes>
+	</test><!-- Test -->
+	<test name="accountSetup chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.AccountsSetup" />
+		</classes>
+	</test><!-- Test -->
+	<test name="accountSetup firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.AccountsSetup" />
+		</classes>
+	</test><!-- Test -->
+	<test name="accountSetup mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.checkout.AccountsSetup" />
+		</classes>
+	</test><!-- Test -->
+</suite> <!-- Suite -->

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite" parallel="tests" thread-count="10" data-provider-thread-count="3">
+	<test name="Login chrome">
+		<parameter name="browserName" value="chrome"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+		<test name="Login firefox">
+		<parameter name="browserName" value="firefox"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+	<test name="Login mobile_Nexus 5">
+		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
+		<classes>
+			<class name="com.generic.tests.login.LoginValidation" />
+		</classes>
+	</test><!-- Test -->
+</suite> <!-- Suite -->

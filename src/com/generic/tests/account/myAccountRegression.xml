@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Suite" parallel="tests" thread-count="10" data-provider-thread-count="5">
-
+<suite name="Suite" parallel="tests" thread-count="10" data-provider-thread-count="3">
 	<test name="Account firefox">
 		<parameter name="browserName" value="firefox"></parameter>
 		<classes>
@@ -31,5 +30,5 @@
 		   	<class name="com.generic.tests.account.PaymentDetailsValidation" />
 		   	<class name="com.generic.tests.account.PersonalDetailsValidation" />
 		</classes>
-	</test><!-- Test -->
+	</test><!-- Test -->	
 </suite> <!-- Suite -->

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite" parallel="tests" thread-count="10" data-provider-thread-count="2">
-	<test name="cart Tests _ chrome">
+	<test name="CLP_SC Chrome">
 		<parameter name="browserName" value="chrome"></parameter>
 		<classes>
-			<class name="com.generic.tests.PDP.Base_PDP" />
+			<class name="com.generic.tests.staticContects.CLPBase" />
 		</classes>
 	</test><!-- Test -->
-	<test name="cart Tests _ firefox">
+	<test name="CLP_SC firefox">
 		<parameter name="browserName" value="firefox"></parameter>
 		<classes>
-			<class name="com.generic.tests.PDP.Base_PDP" />
+			<class name="com.generic.tests.staticContects.CLPBase" />
 		</classes>
 	</test><!-- Test -->
-	<test name="cart Tests _ mobile_Nexus 5">
+	<test name="CLP_SC mobile_Nexus 5">
 		<parameter name="browserName" value="mobile_Nexus 5"></parameter>
 		<classes>
-			<class name="com.generic.tests.PDP.Base_PDP" />
+			<class name="com.generic.tests.staticContects.CLPBase" />
 		</classes>
 	</test><!-- Test -->
+
 </suite> <!-- Suite -->

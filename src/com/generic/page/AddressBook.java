@@ -16,8 +16,6 @@ import com.generic.util.SelectorUtil;
 
 public class AddressBook extends SelTestCase {
 
-	public static final LinkedHashMap<String, Object> addresses = Common.readAddresses();
-
 	// public static void clickmyaccount() throws Exception {
 	// getCurrentFunctionName(true);
 	// List<String> subStrArr = new ArrayList<String>();

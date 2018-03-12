@@ -167,8 +167,8 @@ public class Xls_Reader {
 
 				return cellText;
 			}else if (cell.getCellTypeEnum() ==  CellType.BOOLEAN) {
-				cell.setCellType(CellType.STRING);
 				logs.debug("Cell is boolean: " + cell.getCellTypeEnum() + " " +String.valueOf(cell.getBooleanCellValue()) );
+				cell.setCellType(CellType.STRING);
 				logs.debug("Cell is not fit to any type : " + cell.getCellTypeEnum() + "sheet:ROW/COL: " + sheetName+":"+colNum +"/"+rowNum );
 				return String.valueOf(cell.getBooleanCellValue());
 			}else if (cell.getCellTypeEnum() == CellType.BLANK)

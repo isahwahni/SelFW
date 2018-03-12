@@ -10,8 +10,6 @@ import com.generic.setup.SelTestCase;
 import com.generic.util.SelectorUtil;
 
 public class OrderHistory extends SelTestCase {
-	private static List<String> subStrArr = new ArrayList<String>();
-    private static List<String> valuesArr = new ArrayList<String>();
     private static int numberOfOrdersShownInHeader;
     
     public static class keys {
@@ -20,6 +18,8 @@ public class OrderHistory extends SelTestCase {
     
     public static void selectSortOptions1ByValue(String sortByTxt) throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.SELECTING_ELEMENT_VALUE,OrderHistorySelector.sortOptions1, sortByTxt));
 		subStrArr.add(OrderHistorySelector.sortOptions1);
 		valuesArr.add(sortByTxt);
@@ -31,6 +31,8 @@ public class OrderHistory extends SelTestCase {
     
     public static String getSortOptions2SelectedValue() throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR,OrderHistorySelector.sortOptions2));
 		subStrArr.add(OrderHistorySelector.sortOptions2);
 		valuesArr.add("");
@@ -43,6 +45,8 @@ public class OrderHistory extends SelTestCase {
     
     public static void selectSortOptions2ByValue(String sortByTxt) throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.SELECTING_ELEMENT_VALUE,OrderHistorySelector.sortOptions2, sortByTxt));
 		subStrArr.add(OrderHistorySelector.sortOptions2);
 		valuesArr.add(sortByTxt);
@@ -54,6 +58,8 @@ public class OrderHistory extends SelTestCase {
     
     public static String getSortOptions1SelectedValue() throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR,OrderHistorySelector.sortOptions1));
 		subStrArr.add(OrderHistorySelector.sortOptions1);
 		valuesArr.add("");
@@ -66,22 +72,26 @@ public class OrderHistory extends SelTestCase {
     
     public static String getNumberOfOrders() throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		subStrArr.add(OrderHistorySelector.ordersNumberLabel);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_ORDERS, SelectorUtil.textValue.get()));
 		getCurrentFunctionName(false);
 		String ordersNum = SelectorUtil.textValue.get().split(" ")[0];
-		numberOfOrdersShownInHeader = Integer.parseInt(ordersNum);
 		return ordersNum;
 	}
     
     public static boolean doesDisplayedOrdersNumTextMatchesOrdersDisplayed() throws Exception {
     	getCurrentFunctionName(true);
+    	List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
     	getNumberOfOrders();
 		subStrArr.add(OrderHistorySelector.responsiveTableItem);
 		valuesArr.add("noClick");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		int numberOfOrdersShownInHeader = Integer.parseInt(getNumberOfOrders());
 		logs.debug(MessageFormat.format(LoggingMsg.EXPECTED_TEXT, numberOfOrdersShownInHeader));
 		logs.debug(MessageFormat.format(LoggingMsg.ACTUAL_TEXT, SelectorUtil.numberOfFoundElements.get()));
 		getCurrentFunctionName(false);
@@ -95,6 +105,8 @@ public class OrderHistory extends SelTestCase {
     
     public static String clickNthResponsiveTableItemTableCellAnchor(String nthChild, int index) throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		String selText = MessageFormat.format(OrderHistorySelector.nthResponsiveTableItemTableCellAnchor, nthChild);
 		logs.debug(MessageFormat.format(LoggingMsg.CLICKING_SEL, selText));
 		subStrArr.add(selText);
@@ -107,6 +119,8 @@ public class OrderHistory extends SelTestCase {
     // index is the index of the exact element extracted from all elements returned
     public static String getNthResponsiveTableItemColumn(String nthChild, int index) throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		String selText = MessageFormat.format(OrderHistorySelector.nthResponsiveTableItemColumn, nthChild);
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR, selText));
 		subStrArr.add(selText);
@@ -118,6 +132,8 @@ public class OrderHistory extends SelTestCase {
 
     public static String getNoOrdersMessage() throws Exception {
 		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR,OrderHistorySelector.orderHistoryNoOrders));
 		subStrArr.add(OrderHistorySelector.orderHistoryNoOrders);
 		valuesArr.add("");

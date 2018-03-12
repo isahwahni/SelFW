@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.Random;
+
 
 //import org.apache.log4j.Logger;
 
@@ -21,7 +21,6 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.asserts.SoftAssert;
-import org.testng.util.Strings;
 import org.testng.xml.XmlTest;
 
 import com.generic.util.ReportAnalyzer;
@@ -187,9 +186,9 @@ public class SelTestCase {
     {
     	try {
 			if (BrowserName.equals("firefox"))
-				Thread.sleep(500);
+				Thread.sleep(1000);
 			else if (BrowserName.equals("chrome"))
-				Thread.sleep(100);
+				Thread.sleep(1500);
 			else
 				Thread.sleep(RandomUtils.nextInt(900,1200));
 		} catch (InterruptedException e) {

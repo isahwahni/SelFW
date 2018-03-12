@@ -11,7 +11,7 @@ import com.generic.setup.SelTestCase;
 import com.generic.util.SelectorUtil;
 
 public class PLP extends SelTestCase {
-    private static int numberOfProductsShownInHeader;
+
     
     public static class keys {
 		public static final String caseId = "caseId";
@@ -75,6 +75,7 @@ public class PLP extends SelTestCase {
 		getCurrentFunctionName(true);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
+	    int numberOfProductsShownInHeader;
 		subStrArr.add(PLPSelectors.numberOfProductsFound);
 		valuesArr.add("");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
@@ -89,6 +90,16 @@ public class PLP extends SelTestCase {
     	getCurrentFunctionName(true);
     	List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
+	    int numberOfProductsShownInHeader;
+		subStrArr.add(PLPSelectors.numberOfProductsFound);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_PRODUCTS, SelectorUtil.textValue.get()));
+		getCurrentFunctionName(false);
+		String productsNum = SelectorUtil.textValue.get().split(" ")[0];
+		numberOfProductsShownInHeader = Integer.parseInt(productsNum);
+		subStrArr.clear();
+		valuesArr.clear();
 		subStrArr.add(PLPSelectors.productItem);
 		valuesArr.add("noClick");
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
@@ -226,6 +237,15 @@ public class PLP extends SelTestCase {
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		getCurrentFunctionName(false);
 	}
+    public static void clickFacetNavFirstPriceCheckBox() throws Exception {
+		getCurrentFunctionName(true);
+		List<String> subStrArr = new ArrayList<String>();
+		List<String> valuesArr = new ArrayList<String>();
+		subStrArr.add(PLPSelectors.facetNavFirstPrice);
+		valuesArr.add("");
+		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
+		getCurrentFunctionName(false);
+	}
     
     public static String getFacetNavTitleStoresCount() throws Exception {
 		getCurrentFunctionName(true);
@@ -315,9 +335,10 @@ public class PLP extends SelTestCase {
 		getCurrentFunctionName(false);
 	}
     
-    public static void compareAppliedFilterWithDisplayedProductNumber(String filterName) throws Exception {
+    public static boolean compareAppliedFilterWithDisplayedProductNumber(String filterName) throws Exception {
 		getCurrentFunctionName(true);
 		String tempAppliedFilterCount = "";
+		boolean IsFilterAppliedCorectly =true;
 		if (filterName.equals("stores")) {
 			tempAppliedFilterCount = PLP.getFacetNavTitleStoresCount();
 		} else if (filterName.equals("price")) {
@@ -332,13 +353,17 @@ public class PLP extends SelTestCase {
 		String appliedFilterCount = tempAppliedFilterCount.trim();
 		String displayedProductsCount = PLP.getNumberOfproducts().trim();
 		logs.debug(MessageFormat.format(LoggingMsg.NUMBER_OF_PRODUCTS, displayedProductsCount));
+		logs.debug(MessageFormat.format(LoggingMsg.APPLIED_FILTER_COUNT, appliedFilterCount));
 		if (!appliedFilterCount.isEmpty() && displayedProductsCount.equals(appliedFilterCount)) {
 			logs.debug(MessageFormat.format(LoggingMsg.PLP_FILTER_FUNCTIONALITY, ""));
+	
 		} else {
 			logs.debug(MessageFormat.format(LoggingMsg.PLP_FILTER_FUNCTIONALITY, "not"));
+			IsFilterAppliedCorectly = false;
 		}
 		getCurrentFunctionName(false);
-	}
+		return IsFilterAppliedCorectly;
+    }
     
     public static void clickNthProductItem(String nthChild) throws Exception {
 		getCurrentFunctionName(true);

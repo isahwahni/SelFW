@@ -19,9 +19,11 @@ import com.generic.page.SignIn;
 import com.generic.selector.AddressBookSelectors;
 import com.generic.setup.Common;
 import com.generic.setup.LoggingMsg;
+import com.generic.setup.PagesURLs;
 import com.generic.setup.SelTestCase;
 import com.generic.setup.SheetVariables;
 import com.generic.util.TestUtilities;
+import com.generic.util.dataProviderUtils;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 import com.generic.util.SelectorUtil;
@@ -48,6 +50,7 @@ public class AddressBookValidation extends SelTestCase {
 
 	@BeforeTest
 	public static void initialSetUp(XmlTest test) throws Exception {
+		Testlogs.set(new SASLogger(test.getName() + test.getIndex()));
 		addresses = Common.readAddresses();
 		users = Common.readUsers();
 		testObject = test;
@@ -57,13 +60,15 @@ public class AddressBookValidation extends SelTestCase {
 	public static Object[][] loadTestData() throws Exception {
 		// concurrency maintenance on sheet reading
 		getBrowserWait(testObject.getParameter("browserName"));
-		Object[][] data = TestUtilities.getData(testDataSheet);
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(testDataSheet);
 		return data;
+		
 	}
 
 	@SuppressWarnings("unchecked") // avoid warning from linked hashmap
 	@Test(dataProvider = "AddressBook")
-	public void BookAddressTest(String caseId, String runTest, String url, String desc, String email, String newaddress)
+	public void BookAddressTest(String caseId, String runTest,String desc, String prop, String email, String newaddress)
 			throws Exception {
 		// Important to add this for logging/reporting
 		Testlogs.set(new SASLogger("Address_Book " + getBrowserName()));
@@ -71,21 +76,21 @@ public class AddressBookValidation extends SelTestCase {
 		logCaseDetailds(MessageFormat.format(LoggingMsg.ADDRESSPOOKDESC, testDataSheet + "." + caseId,
 				this.getClass().getCanonicalName(), desc));
 
-		this.email = email.replace("tester", "tester_" + getBrowserName().replace(" ", "_"));
-
+		this.email = getSubMailAccount(email);
+		String url = PagesURLs.getAddressBookPage();
+		
 		try {
 			LinkedHashMap<String, Object> userdetails = (LinkedHashMap<String, Object>) users.get(email);
 			Testlogs.get().debug(this.email);
 			Testlogs.get().debug((String) userdetails.get(Registration.keys.password));
 			
-			if (desc.contains("edit")) {
+			if (prop.contains("edit")) {
 				SignIn.logIn(this.email, (String) userdetails.get(Registration.keys.password));
 				getDriver().get(url);
 				addressbook = AddressBook.getFirstAddressDetails();
 				AddressBook.clickEditAddress();
 				LinkedHashMap<String, Object> addressDetails = (LinkedHashMap<String, Object>) addresses
 						.get(newaddress);
-				logs.debug("test");
 				AddressBook.fillAndClickSave((String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
 						"NEW_" + RandomUtils.nextInt(1000, 9000),
@@ -97,7 +102,7 @@ public class AddressBookValidation extends SelTestCase {
 				AddressBook.clickAddressBackBtn();
 				assertNotEquals(addressbook, AddressBook.getFirstAddressDetails());
 			}
-			if (desc.contains("form validation")) {
+			if (prop.contains("form validation")) {
 				SignIn.logIn(this.email, (String) userdetails.get(Registration.keys.password));
 				getDriver().get(url);
 				addressbook = AddressBook.getFirstAddressDetails();
@@ -105,7 +110,7 @@ public class AddressBookValidation extends SelTestCase {
 				AddressBook.clearAddress();
 				AddressBook.verifyAddressFormError();
 			}
-			if (desc.contains("new") || desc.contains("default") || desc.contains("delete")) {
+			if (prop.contains("new") || prop.contains("default") || prop.contains("delete")) {
 				SignIn.logIn(this.email, (String) userdetails.get(Registration.keys.password));
 				getDriver().get(url);
 				addressbook = AddressBook.getFirstAddressDetails();
@@ -114,7 +119,6 @@ public class AddressBookValidation extends SelTestCase {
 				getDriver().get(AddressBookSelectors.addaddressurl);
 				LinkedHashMap<String, Object> addressDetails = (LinkedHashMap<String, Object>) addresses
 						.get(newaddress);
-				logs.debug("test");
 				AddressBook.fillAndClickSave((String) addressDetails.get(CheckOut.shippingAddress.keys.countery),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.title),
 						"NEW_" + RandomUtils.nextInt(1000, 9000),
@@ -124,13 +128,13 @@ public class AddressBookValidation extends SelTestCase {
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.postal),
 						(String) addressDetails.get(CheckOut.shippingAddress.keys.phone), defaultAddress);
 				AddressBook.clickAddressBackBtn();
-				if (desc.contains("new")) {
+				if (prop.contains("new")) {
 					sassert().assertNotEquals(addressbook, AddressBook.getFirstAddressDetails());
 					//Remove the created address.
 					AddressBook.clickRemoveAddress(0);
 					AddressBook.clickDeleteBtn();
 				}
-				if (desc.contains("default")) {
+				if (prop.contains("default")) {
 					getDriver().get(url);
 					addressbook = AddressBook.getFirstAddressDetails();
 					AddressBook.clickSetAsDefault();
@@ -140,7 +144,7 @@ public class AddressBookValidation extends SelTestCase {
 					AddressBook.clickRemoveAddress(1);
 					AddressBook.clickDeleteBtn();
 				}
-				if (desc.contains("delete")) {
+				if (prop.contains("delete")) {
 					getDriver().get(url);
 					String numberofaddresses = AddressBook.getNumberOfAddresses(AddressBookSelectors.accountAddressbookList);
 					AddressBook.clickRemoveAddress(0);

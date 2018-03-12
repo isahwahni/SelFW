@@ -2,6 +2,14 @@ package com.generic.selector;
 public class CheckOutSelectors
 {
 	
+	// Payment Type
+	public static final String PaymentTypeSelection_CARD = "PaymentTypeSelection_CARD";
+	public static final String PaymentTypeSelection_ACCOUNT = "PaymentTypeSelection_ACCOUNT";
+	public static final String PurchaseOrderNumber = "text form-control";
+	public static final String PaymentType_continue_button = "btn btn-primary btn-block checkout-next";
+	public static final String PaymentTypeCostCenterSelect = "costCenterSelect";
+	
+	
 	//Shipping Address
 	public static final String countery = "address.country";
 	public static final String title = "address.title";
@@ -22,8 +30,9 @@ public class CheckOutSelectors
 	public static final String address1Error = "line1.errors";
 	public static final String cityError = "townCity.errors";
 	public static final String postcodeEerror = "postcode.errors";
-	public static final String alertInfo = "alert alert-info alert-dismissable";
+	public static final String alertInfo = "alert alert-danger alert-dismissable";
 	public static final String titleError = "titleCode.errors";
+	public static final String countryError = "countryIso.errors";
 	
 	//shipping method
 	public static final String shippingMethod = "delivery_method";
@@ -68,6 +77,11 @@ public class CheckOutSelectors
 	public static final String orderconfirmationBillingAddress = "col-sm-6 col-md-4 order-billing-address";
 	public static final String orderconfirmationshippingAddress = "order-ship-to";
 	
+	//B2B Order confirmation
+	public static final String B2BorderConfirmationTotal = "text-right totals";
+	public static final String B2BorderconfirmationBillingAddress = "col-sm-6 order-billing-address";
+	public static final String B2BorderconfirmationshippingAddress = "col-md-5 order-ship-to";
+	
 	//Guest order
 	public static final String guestMail = "guest.email";
 	public static final String guestConfirmationMail = "confirmGuestEmail form-control";
@@ -76,6 +90,9 @@ public class CheckOutSelectors
 	public static final String guestCreateAccOtpin = "consentForm.consentGiven1";
 	public static final String guestCreateAccCPwd = "guest.checkPwd";
 	public static final String guestCreateAccPwd = "password";
+	public static final String returningcustomerUsername = "j_username";
+	public static final String returningcustomerPassword = "j_password";
+	public static final String returningcustomerloginBtn = "Log In and Check Out";
 	
 	
 	

@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.NoSuchElementException;
 
 public class PagesURLs extends SelTestCase {
+	public static String HP = "HomePage";
 	public static String driversPath = "driversPath";
 	public static String personalDetailsPage = "personalDetailsPage";
 	public static String emailAddressPage = "emailAddressPage";
@@ -18,7 +19,9 @@ public class PagesURLs extends SelTestCase {
 	public static String shoppingCartPage = "shoppingCartPage";
 	public static String signOutPage = "signOutPage";
 	public static String storeFinderPage = "storeFinderPage";
-	
+	public static String errorPage = "errorPage";
+	public static String PLP = "PLP";
+	public static String CLP = "CLP";
 	
 	public static String getDriversPath(String driverName) {
 		try {
@@ -221,6 +224,62 @@ public class PagesURLs extends SelTestCase {
 			getCONFIG().setProperty(storeFinderPage,newStoreFinderPage);
 			} catch(Throwable t) {
 				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, storeFinderPage));
+			}
+	}
+	public static String getErrorPage() {
+		try {
+			return getCONFIG().getProperty(errorPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, storeFinderPage));
+			}
+	}
+	public static void setErrorPage(String newErrorPage) {
+		try {
+			getCONFIG().setProperty(errorPage,newErrorPage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, newErrorPage));
+			}
+	}
+	public static String getPLP() {
+		try {
+			return getCONFIG().getProperty(PLP);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, storeFinderPage));
+			}
+	}
+	public static void setPLP(String newPLP) {
+		try {
+			getCONFIG().setProperty(PLP,newPLP);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, PLP));
+			}
+	}
+	public static String getHomePage() {
+		try {
+			return getCONFIG().getProperty(HP);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, HP));
+			}
+	}
+	public static void setHomePage(String newHomePage) {
+		try {
+			getCONFIG().setProperty(HP,newHomePage);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, HP));
+			}
+	}
+	public static String getCLP() {
+		try {
+			return getCONFIG().getProperty(CLP);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, CLP));
+			}
+	}
+	public static void setCLP(String newCLP) {
+		try {
+			getCONFIG().setProperty(CLP,newCLP);
+			} catch(Throwable t) {
+				throw new NoSuchElementException(MessageFormat.format(LoggingMsg.PROPERTY_ERROR_MSG, CLP));
 			}
 	}
 

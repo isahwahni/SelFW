@@ -14,9 +14,11 @@ import com.generic.page.SignIn;
 import com.generic.setup.ActionDriver;
 import com.generic.setup.Common;
 import com.generic.setup.LoggingMsg;
+import com.generic.setup.PagesURLs;
 import com.generic.setup.SelTestCase;
 import com.generic.setup.SheetVariables;
 import com.generic.util.TestUtilities;
+import com.generic.util.dataProviderUtils;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 import com.generic.page.Cart;
@@ -65,14 +67,15 @@ public class OrderDetailsValidation extends SelTestCase {
 	// concurrency maintenance on sheet reading
 	public static Object[][] loadTestData() throws Exception {
 		getBrowserWait(testObject.getParameter("browserName"));
-		Object[][] data = TestUtilities.getData(testDataSheet);
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(testDataSheet);
 		Testlogs.get().debug(Arrays.deepToString(data).replace("\n", "--"));
 		return data;
 	}
 
 	@SuppressWarnings("unchecked") // avoid warning from linked hashmap
 	@Test(dataProvider = "ordersDetails")
-	public void verifyOrdeDetails(String caseId, String runTest, String desc, String email,String products, String shippingMethod, String payment, String shippingAddress, String billingAddress, String url, String orderNumToBeClicked) throws Exception {
+	public void verifyOrdeDetails(String caseId, String runTest, String desc, String email,String products, String shippingMethod, String payment, String shippingAddress, String billingAddress, String orderNumToBeClicked) throws Exception {
 
 		Testlogs.set(new SASLogger("ordersDetails" + getBrowserName()));
 		setTestCaseReportName("ordersDetails Case");
@@ -80,7 +83,7 @@ public class OrderDetailsValidation extends SelTestCase {
 				this.getClass().getCanonicalName(), desc));
 		this.email = getSubMailAccount(email);
 		caseIndexInDatasheet = getDatatable().getCellRowNum(testDataSheet, OrderDetails.keys.caseId, caseId);
-
+		String url = PagesURLs.getOrderHistoryPage();
 		try {
 
 			LinkedHashMap<String, Object> userdetails = (LinkedHashMap<String, Object>) users.get(email);
@@ -92,7 +95,7 @@ public class OrderDetailsValidation extends SelTestCase {
 			for (String product : products.split("\n")) {
 				Testlogs.get().debug(MessageFormat.format(LoggingMsg.ADDING_PRODUCT, product));
 				productDetails = (LinkedHashMap<String, Object>) invintory.get(product);
-				PDP.addProductsToCart((String) productDetails.get(PDP.keys.url),
+				PDP.addProductsToCartAndClickCheckOut((String) productDetails.get(PDP.keys.url),
 						(String) productDetails.get(PDP.keys.color), (String) productDetails.get(PDP.keys.size),
 						(String) productDetails.get(PDP.keys.qty));
 			}
@@ -150,6 +153,8 @@ public class OrderDetailsValidation extends SelTestCase {
 			this.shippingAddrerss = CheckOut.orderConfirmation.getShippingAddrerss();
 			
 			// Go to Order History Page.
+			Testlogs.get().debug("wait to be sure that the new order is diplayed in Order History page");
+			Thread.sleep(2000);
 			getDriver().get(url);
 			//Click on first order on order history page
 			OrderHistory.clickNthResponsiveTableItemTableCellAnchor("1",
@@ -188,7 +193,8 @@ public class OrderDetailsValidation extends SelTestCase {
 		    //Order Cancellation period has been updated to 1 minute, after that the order will be shipped.
 			//and the user will not be able to cancel it.
 			//and will be able to return the order.
-		    Thread.sleep(80000);
+			logs.debug("Wating session to be done and order to have return button ");
+			Thread.sleep(80000);
 		    Common.refreshBrowser();
 		    Thread.sleep(4000);
 			sassert().assertTrue(shippingMethod.contains(OrderDetails.getDeliveryMethod()),

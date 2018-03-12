@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,43 +57,48 @@ public class ReportAnalyzer {
 	
 	public static void analyze(String path, float period_step ) throws IOException
 	{
-		//TODO: remove this function 
 		System.out.println("Analyzing report: " + path +" Period is: "+ period_step);
 		String content;
 		content = new String(Files.readAllBytes(Paths.get(path)));
-		BufferedReader bufReader = new BufferedReader(new StringReader(content));
+		//BufferedReader bufReader = new BufferedReader(new StringReader(content));
 		SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss"); 
 		
-		String Pline=bufReader.readLine();
-		String Cline=null;
+		int lineNumber = 1;
+		String[] lines = content.split("\n");
 		
-		FileUtils.writeStringToFile(new File(path),"<font face='monospace'>0: "+Pline);
+		String Pline="";
+		String Cline="";
 		
-		while( (Cline=bufReader.readLine()) != null )
+		String analyzedResult = "<font face='monospace'>0: " + lines[0];
+		
+		for(int i=0; i< lines.length-1; i++)
+		//while( (Cline=bufReader.readLine()) != null )
 		{	
-			
+			Pline = lines[lineNumber-1];
+			Cline = lines[lineNumber++];
 				
 				long  diff = 0 ;
 				
 				try {
 					diff = (format.parse(Cline.split(" ")[1]).getTime())- (format.parse(Pline.split(" ")[1]).getTime());
 				} catch (Exception t) {
-					// TODO Auto-generated catch block
 					System.out.println("Line is not parsable");
 					diff = 0;
 				}
 				
 			if (diff>period_step)
 			{
-				FileUtils.writeStringToFile(new File(path), "<SPAN STYLE='background-color: #ffffcc'>"+diff/1000+": "+Cline+"</SPAN>",true) ;
+				//FileUtils.writeStringToFile(new File(path), "<SPAN STYLE='background-color: #ffffcc'>"+diff/1000+": "+Cline+"</SPAN>",true) ;
+				analyzedResult +="<SPAN STYLE='background-color: #ffffcc'>"+diff/1000+": "+Cline+"</SPAN>";
 			}
 			else
 			{
-				FileUtils.writeStringToFile(new File(path), diff/1000+": "+Cline, true) ;
+				//FileUtils.writeStringToFile(new File(path), diff/1000+": "+Cline, true) ;
+				analyzedResult +=diff/1000+": "+Cline;
 			}
-			Pline = new String(Cline);
+			//Pline = new String(Cline);
 		}
-		FileUtils.writeStringToFile(new File(path), "<style>img {    border: 1px solid #ddd;    border-radius: 4px;    padding: 5px;    width: 150px;}img:hover {    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);}</style>", true) ;
+		FileUtils.writeStringToFile(new File(path), analyzedResult+"<style>img {    border: 1px solid #ddd;    border-radius: 4px;    padding: 5px;    width: 150px;}img:hover {    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);}</style>",Charset.forName("utf-8")) ;
 	}
 	
 	public static void splitLogs()

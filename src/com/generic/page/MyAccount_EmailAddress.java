@@ -26,6 +26,7 @@ public class MyAccount_EmailAddress extends SelTestCase {
 		String email = "";
 		SelectorUtil.initializeSelectorsAndDoActions(subStrArr, valuesArr);
 		email = SelectorUtil.textValue.get();
+		logs.debug("the email address found in my account page: " + email);
 		getCurrentFunctionName(false);
 		return email;
 	}
@@ -105,6 +106,7 @@ public class MyAccount_EmailAddress extends SelTestCase {
 
 	public static String getEmailErrorMsg() throws Exception {
 		getCurrentFunctionName(true);
+		Thread.sleep(1000);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR, MyAccount_EmailAddressSelectors.emailError));
@@ -119,6 +121,7 @@ public class MyAccount_EmailAddress extends SelTestCase {
 
 	public static String getConfirmEmailErrorMsg() throws Exception {
 		getCurrentFunctionName(true);
+		Thread.sleep(1000);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(MessageFormat.format(LoggingMsg.GET_ELEMENT_BY_LOCATOR,
@@ -134,6 +137,7 @@ public class MyAccount_EmailAddress extends SelTestCase {
 
 	public static String getPasswordErrorMsg() throws Exception {
 		getCurrentFunctionName(true);
+		Thread.sleep(1000);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(
@@ -149,6 +153,7 @@ public class MyAccount_EmailAddress extends SelTestCase {
 
 	public static String getGlobalAlertsMsg() throws Exception {
 		getCurrentFunctionName(true);
+		Thread.sleep(1000);
 		List<String> subStrArr = new ArrayList<String>();
 		List<String> valuesArr = new ArrayList<String>();
 		logs.debug(

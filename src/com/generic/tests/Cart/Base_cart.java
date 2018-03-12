@@ -24,6 +24,7 @@ import com.generic.setup.SheetVariables;
 import com.generic.util.ReportUtil;
 import com.generic.util.SASLogger;
 import com.generic.util.TestUtilities;
+import com.generic.util.dataProviderUtils;
 
 public class Base_cart extends SelTestCase {
 
@@ -56,13 +57,14 @@ public class Base_cart extends SelTestCase {
 	public static Object[][] loadTestData() throws Exception {
 		// concurrency mentainance on sheet reading
 		getBrowserWait(testObject.getParameter("browserName"));
-		Object[][] data = TestUtilities.getData(testDataSheet);
+		dataProviderUtils TDP = dataProviderUtils.getInstance();
+		Object[][] data = TDP.getData(testDataSheet);
 		Testlogs.get().debug(Arrays.deepToString(data).replace("\n", "--"));
 		return data;
 	}
 
 	@Test(dataProvider = "Carts")
-	public void checkOutBaseTest(String caseId, String runTest, String desc, String proprties, String products,
+	public void CartBaseTest(String caseId, String runTest, String desc, String proprties, String products,
 			String email, String newQTY, String coupon, String ValidationMsg) throws Exception {
 		// Important to add this for logging/reporting
 		Testlogs.set(new SASLogger("cart_" + getBrowserName()));
@@ -173,7 +175,7 @@ public class Base_cart extends SelTestCase {
 	public void prepareCartNotLoggedInUser(String product) throws Exception {
 		logs.debug(MessageFormat.format(LoggingMsg.ADDING_PRODUCT, product));
 		productDetails = (LinkedHashMap<String, Object>) invintory.get(product);
-		PDP.addProductsToCart((String) productDetails.get(PDP.keys.url), (String) productDetails.get(PDP.keys.color),
+		PDP.addProductsToCartAndClickCheckOut((String) productDetails.get(PDP.keys.url), (String) productDetails.get(PDP.keys.color),
 				(String) productDetails.get(PDP.keys.size), (String) productDetails.get(PDP.keys.qty));
 	}
 
@@ -186,7 +188,7 @@ public class Base_cart extends SelTestCase {
 
 		logs.debug(MessageFormat.format(LoggingMsg.ADDING_PRODUCT, product));
 		productDetails = (LinkedHashMap<String, Object>) invintory.get(product);
-		PDP.addProductsToCart((String) productDetails.get(PDP.keys.url), (String) productDetails.get(PDP.keys.color),
+		PDP.addProductsToCartAndClickCheckOut((String) productDetails.get(PDP.keys.url), (String) productDetails.get(PDP.keys.color),
 				(String) productDetails.get(PDP.keys.size), (String) productDetails.get(PDP.keys.qty));
 
 	}

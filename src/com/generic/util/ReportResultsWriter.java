@@ -195,11 +195,10 @@ public class ReportResultsWriter {
 	 * @param rUNDATE
 	 * @param eNVIRONMENT
 	 * @param rBrowserType
-	 * @param testSuiteName
 	 * @throws IOException
 	 */
 	public static void writeReportTestDetails(final String testStartTime, BufferedWriter out, String rUNDATE,
-			String eNVIRONMENT, String testSuiteName) throws IOException {
+			String eNVIRONMENT) throws IOException {
 		try {
 			SelTestCase.getCurrentFunctionName(true);
 			SelTestCase.logs.debug(MessageFormat.format(LoggingMsg.DEBUGGING_TEXT, "Copying the template into the target failed test case"));
@@ -220,8 +219,6 @@ public class ReportResultsWriter {
                 } if (str.contains("~StartTime~")) {
                 	str=str.replaceAll("~StartTime~", SelTestCase.rUNDATE);
                 	
-                } if (str.contains("~SuiteName~")) {
-                	str=str.replaceAll("~SuiteName~", testSuiteName);
                 }
                 
 		        out.append(str);
